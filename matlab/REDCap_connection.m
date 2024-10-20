@@ -1,23 +1,24 @@
- 
-% REDCap_connection - Return a structure to connect to REDCAP server
-% 
-% result = REDCap_connection(url, token, longitudinal, table_format
-% Required arguments:
-% - url: URL of REDCAP API server (character vector)
-% - token: API token (character vector)
-% - web_url: URL of REDCAP web server
-% - longitudinal: bolean value
+% redcap_connection - Return a handle to connect to REDCAP serve
 %
-% Optional arguments:
-% - table_format: format the table returned by REDCap API functions. The
-%   possible value are:
+% Syntax
+% ------
+% handle = REDCap_connection(url, token, longitudinal)
+% hanlde = REDCap_connection(url, token, longitudinal, table_format)
+%
+% Description
+% -----------
+% `redcap_connection` return a structure to connect to REDCAP server that
+% contains the  `url` (character vector) of the REDcap API server 
+% and the REDCap API `token` (character vector) for authenticaction. The flag
+% `longitudinal` (logical) must indicate if the project is longitudinal or not.
+% The optional arguments `table_format` specify the format the of tables returned by 
+%  REDCap API functions. The possible value are:
 %   - 'cell2string': convert columns with cell array into an array of strings
 %   - 'cell2char': convert columns with cell array into an array of character vectors
 %   - '': no conversion (default: '').
-% - web_url: base of the REDCAP web url (everything up to index.php?)
-%   (default: '')
-% - pid: REDCAP project id (default: 0)
-function result = REDCap_connection(url, token, longitudinal, varargin)
+%
+% Copyright 2024 UniSR, Gabriel Baud-Bovy <gbaudbovy@gmail.com>
+function result = redcap_connection(url, token, longitudinal, varargin)
     result = struct(url=url, token=token, longitudinal=longitudinal);
     % optional arguments
     keys =    struct(table_format='', web_url='', pid=0);

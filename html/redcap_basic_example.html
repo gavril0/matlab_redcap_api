@@ -1,0 +1,438 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>redcap_basic_example</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-10-20">
+<meta name="DC.source" content="redcap_basic_example.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Basic project requirements</a>
+</li>
+<li>
+<a href="#3">Defining connection handle</a>
+</li>
+<li>
+<a href="#4">Download data dictionary</a>
+</li>
+<li>
+<a href="#5">Write records</a>
+</li>
+<li>
+<a href="#9">Read records</a>
+</li>
+<li>
+<a href="#11">Upload and Download a file</a>
+</li>
+<li>
+<a href="#15">Delete records</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">% redcap_basic_example.m</span>
+<span class="comment">%</span>
+<span class="comment">% Copyright 2024 UniSR, Gabriel Baud-Bovy &lt;gbaudbovy@gmail.com&gt;</span>
+</pre>
+<h2 id="2">Basic project requirements</h2>
+<div>
+<ul>
+<li>Create a REDCap project: Define the instruments by uploading the data dictionary in the project folder (data_dictionary.csv)</li>
+<li>Insert the URL of the REDCap server and REDCap API token in the script: see API section in the REDCap project left column</li>
+<li>You must have necessary privilege to execute the desired commands. You might get error 403 if you lack privilege (Error 403 indicates that the server understands the request but refuses to authorize it).</li>
+</ul>
+</div>
+<p>The project contains two instruments named "instrument 1" and "instrument 2" with an instance of the main field types (text, number, date, etc.).</p>
+<h2 id="3">Defining connection handle</h2>
+<pre class="codeinput">
+<span class="comment">% Initialize urk and token. This script not included in the repository.</span>
+<span class="comment">% Insert the url of your REDCap server and token directly in the next command.</span>
+run(<span class="string">'redcap_api_token.m'</span>);
+
+<span class="comment">% Connection handle</span>
+db_conn = redcap_connection( <span class="keyword">...</span>
+  redcap_url, <span class="keyword">...</span><span class="comment">                   % insert url of redcap server</span>
+  redcap_token, <span class="keyword">...</span><span class="comment">                 % insert redcap api token</span>
+  false, <span class="keyword">...</span><span class="comment">                        % project is not longitudinal</span>
+  <span class="string">'table_format'</span>, <span class="string">'cell2string'</span>);    <span class="comment">% format options</span>
+</pre>
+<h2 id="4">Download data dictionary</h2>
+<pre class="codeinput">redcap_read_dictionary(db_conn, [<span class="string">"instrument 1"</span> <span class="string">"instrument 2"</span>])
+</pre>
+<pre class="codeoutput">
+ans =
+
+  12&times;18 table
+
+     field_name        form_name          section_header        field_type                       field_label                                 select_choices_or_calculations               field_note    text_validation_type_or_show_slider_number    text_validation_min    text_validation_max    identifier    branching_logic    required_field    custom_alignment    question_number    matrix_group_name    matrix_ranking    field_annotation
+    _____________    ______________    _____________________    __________    _________________________________________________    ___________________________________________________    __________    __________________________________________    ___________________    ___________________    __________    _______________    ______________    ________________    _______________    _________________    ______________    ________________
+
+    "record_id"      "instrument_1"    ""                       "text"        "Record ID"                                          ""                                                        NaN                      ""                                      NaN                    NaN               NaN              NaN               NaN                NaN                 NaN              ""                    NaN           ""             
+    "text_box"       "instrument_1"    "First Section "         "text"        "Enter text"                                         ""                                                        NaN                      ""                                      NaN                    NaN               NaN              NaN               NaN                NaN                 NaN              ""                    NaN           ""             
+    "numeric_box"    "instrument_1"    ""                       "text"        "Enter number between (0-100):"                      ""                                                        NaN                      "number"                                  0                    100               NaN              NaN               NaN                NaN                 NaN              ""                    NaN           ""             
+    "dropbox"        "instrument_1"    "Second section"         "dropdown"    "Select choice:"                                     "1, Choice 1 | 2, Choice 2"                               NaN                      ""                                      NaN                    NaN               NaN              NaN               NaN                NaN                 NaN              ""                    NaN           ""             
+    "radiobutton"    "instrument_1"    ""                       "radio"       "Select choice:"                                     "1, Choice 1 | 2, Choice 2"                               NaN                      ""                                      NaN                    NaN               NaN              NaN               NaN                NaN                 NaN              ""                    NaN           ""             
+    "likert_1"       "instrument_1"    "Likert Scale "          "radio"       "Question 1"                                         "1, Resp. 1 | 2, Resp. 2 | 3, Resp. 3 | 4, Resp. 4"       NaN                      ""                                      NaN                    NaN               NaN              NaN               NaN                NaN                 NaN              "likert"              NaN           ""             
+    "likert_2"       "instrument_1"    ""                       "radio"       "Question 2"                                         "1, Resp. 1 | 2, Resp. 2 | 3, Resp. 3 | 4, Resp. 4"       NaN                      ""                                      NaN                    NaN               NaN              NaN               NaN                NaN                 NaN              "likert"              NaN           ""             
+    "likert_3"       "instrument_1"    ""                       "radio"       "Question 3"                                         "1, Resp. 1 | 2, Resp. 2 | 3, Resp. 3 | 4, Resp. 4"       NaN                      ""                                      NaN                    NaN               NaN              NaN               NaN                NaN                 NaN              "likert"              NaN           ""             
+    "date"           "instrument_2"    "Date/time section"      "text"        "Enter date (between 01-01-2024 and 31-12-2024):"    ""                                                        NaN                      "date_dmy"                              NaN                    NaN               NaN              NaN               NaN                NaN                 NaN              ""                    NaN           ""             
+    "time"           "instrument_2"    ""                       "text"        "Enter time (8:00-16:00):"                           ""                                                        NaN                      "time"                                  NaN                    NaN               NaN              NaN               NaN                NaN                 NaN              ""                    NaN           ""             
+    "datetime"       "instrument_2"    ""                       "text"        "Enter date and time:"                               ""                                                        NaN                      "datetime_dmy"                          NaN                    NaN               NaN              NaN               NaN                NaN                 NaN              ""                    NaN           "@HIDEBUTTON"  
+    "file"           "instrument_2"    "File Upload Section"    "file"        "Select file:"                                       ""                                                        NaN                      ""                                      NaN                    NaN               NaN              NaN               NaN                NaN                 NaN              ""                    NaN           ""             
+
+</pre>
+<h2 id="5">Write records</h2>
+<div>
+<ul>
+<li>The data argument is an array of structures specifying values for different records. Fields values are specified via a vector of strings (including for number). The length of the value array must corresponds to the length of the field name array. It is possible to specify different fields for different records.</li>
+<li>The record will be automatically created if the record_id does not exist.</li>
+<li>Existing data are overwritten.</li>
+<li>The instrument name is not needed because field names are unique</li>
+</ul>
+</div>
+<pre class="codeinput">field_names = [<span class="string">"text_box"</span> <span class="string">"numeric_box"</span> <span class="string">"dropbox"</span> <span class="string">"radiobutton"</span> <span class="string">"likert_1"</span> <span class="string">"likert_2"</span> <span class="string">"likert_3"</span>];
+data = [ <span class="keyword">...</span>
+    struct(<span class="string">'record'</span>, 1, <span class="keyword">...</span>
+           <span class="string">'field'</span>, field_names, <span class="keyword">...</span>
+           <span class="string">'value'</span>, [<span class="string">"First record"</span> <span class="string">"10"</span>   <span class="string">"1"</span> <span class="string">"2"</span>   <span class="string">"2"</span> <span class="string">"2"</span> <span class="string">"1"</span>] <span class="keyword">...</span>
+       ), <span class="keyword">...</span>
+    struct(<span class="string">'record'</span>, 2, <span class="keyword">...</span>
+           <span class="string">'field'</span>,  [<span class="string">"text_box"</span> <span class="string">"date"</span> <span class="string">"time"</span> <span class="string">"datetime"</span>], <span class="keyword">...</span>
+           <span class="string">'value'</span>, [<span class="string">"Second record"</span> <span class="string">"2024-01-02"</span> <span class="string">"09:30"</span> <span class="string">"2024-01-02 09:30"</span>] <span class="keyword">...</span>
+       ) <span class="keyword">...</span>
+    ];
+
+<span class="comment">% Write multiple records</span>
+redcap_write(db_conn, data)
+</pre>
+<pre class="codeoutput">
+ans = 
+
+  struct with fields:
+
+    count: 2
+
+</pre>
+<p>The `redcap_write_record` function is a wrapper around the `redcap_write` function that can be used to write value of a single record.</p>
+<pre class="codeinput">redcap_write_record(db_conn, 2, <span class="string">''</span>,  field_names, [<span class="string">"Second record"</span> <span class="string">"20"</span>   <span class="string">"2"</span> <span class="string">"1"</span>   <span class="string">"1"</span> <span class="string">"2"</span> <span class="string">"1"</span>])
+</pre>
+<pre class="codeoutput">
+ans = 
+
+  struct with fields:
+
+    count: 1
+
+</pre>
+<pre class="codeinput">redcap_write_record(db_conn, 1, <span class="string">''</span>, [<span class="string">"date"</span> <span class="string">"time"</span> <span class="string">"datetime"</span>], [<span class="string">"2024-02-01"</span> <span class="string">"09:30"</span> <span class="string">"2024-02-01 09:30"</span>])
+</pre>
+<pre class="codeoutput">
+ans = 
+
+  struct with fields:
+
+    count: 1
+
+</pre>
+<p>Update instrument status</p>
+<pre class="codeinput">redcap_write_record(db_conn, 1, <span class="string">''</span>, [<span class="string">"instrument_1_complete"</span>], [<span class="string">"2"</span>])
+</pre>
+<pre class="codeoutput">
+ans = 
+
+  struct with fields:
+
+    count: 1
+
+</pre>
+<h2 id="9">Read records</h2>
+<pre class="codeinput">
+<span class="comment">% Read all records</span>
+redcap_read(db_conn, [], <span class="string">''</span>, <span class="string">''</span>)
+</pre>
+<pre class="codeoutput">
+ans =
+
+  2&times;14 table
+
+    record_id       text_box        numeric_box    dropbox    radiobutton    likert_1    likert_2    likert_3    instrument_1_complete       date         time            datetime                file          instrument_2_complete
+    _________    _______________    ___________    _______    ___________    ________    ________    ________    _____________________    ___________    _______    ____________________    ________________    _____________________
+
+        1        "First record"         10            1            2            2           2           1                  2              01-Feb-2024    "09:30"    01-Feb-2024 09:30:00    "test_image.jpg"              0          
+        2        "Second record"        20            2            1            1           2           1                  0              02-Jan-2024    "09:30"    02-Jan-2024 09:30:00    ""                            0          
+
+</pre>
+<p>Read a subset of records and fields</p>
+<pre class="codeinput">redcap_read(db_conn, [1], <span class="string">''</span>, field_names)
+</pre>
+<pre class="codeoutput">
+ans =
+
+  1&times;7 table
+
+       text_box       numeric_box    dropbox    radiobutton    likert_1    likert_2    likert_3
+    ______________    ___________    _______    ___________    ________    ________    ________
+
+    "First record"        10            1            2            2           2           1    
+
+</pre>
+<h2 id="11">Upload and Download a file</h2>
+<pre class="codeinput">
+<span class="comment">% Upload a text file</span>
+redcap_write_file(conn, 1, <span class="string">''</span>, <span class="string">'file'</span>, <span class="string">'LICENSE.txt'</span>)
+</pre>
+<pre class="codeoutput">
+ans =
+
+  logical
+
+   1
+
+</pre>
+<p>Download a text file</p>
+<pre class="codeinput">redcap_read_file(conn, 1, <span class="string">''</span>, <span class="string">'file'</span>)
+</pre>
+<pre class="codeoutput">
+ans =
+
+    'Copyright 2023 Gabriel Baud-Bovy &lt;gbaudbovy@gmail.com&gt;
+     
+     Permission is hereby granted, free of charge, to any person obtaining 
+     a copy of this software and associated documentation files (the &ldquo;Software&rdquo;), 
+     to deal in the Software without restriction, including without limitation 
+     the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+     and/or sell copies of the Software, and to permit persons to whom the 
+     Software is furnished to do so, subject to the following conditions:
+     
+     The above copyright notice and this permission notice shall be included in
+     all copies or substantial portions of the Software.
+     
+     THE SOFTWARE IS PROVIDED &ldquo;AS IS&rdquo;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+     IN THE SOFTWARE.
+     '
+
+</pre>
+<p>Upload an jpeg image</p>
+<pre class="codeinput">redcap_write_file(conn, 1, <span class="string">''</span>, <span class="string">'file'</span>, <span class="string">'html/test_image.jpg'</span>)
+</pre>
+<pre class="codeoutput">
+ans =
+
+  logical
+
+   1
+
+</pre>
+<p>Download jpeg image</p>
+<pre class="codeinput">img = redcap_read_file(conn, 1, <span class="string">''</span>, <span class="string">'file'</span>);
+imshow(img);
+</pre>
+<img vspace="5" hspace="5" src="redcap_basic_example_01.png" alt=""> <h2 id="15">Delete records</h2>
+<pre class="codeinput">
+<span class="comment">% catch possible error if privilege are insufficient</span>
+<span class="keyword">try</span>
+    result = redcap_delete(db_conn, [2]);
+<span class="keyword">catch</span> exc
+    disp(exc);
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">  MException with properties:
+
+    identifier: 'MATLAB:webservices:HTTP403StatusCodeError'
+       message: 'The server returned the status 403 with message "Forbidden" in response to the request to URL https://redcap.hsr.it/redcap_v13.1.28/API/.'
+         cause: {}
+         stack: [9&times;1 struct]
+    Correction: []
+
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+% redcap_basic_example.m
+%
+% Copyright 2024 UniSR, Gabriel Baud-Bovy <gbaudbovy@gmail.com>
+%% Basic project requirements
+%  
+% * Create a REDCap project:  Define the instruments by uploading the data dictionary
+%   in the project folder (data_dictionary.csv)
+% * Insert the URL of the REDCap server and REDCap API token in the script:
+%    see API section in the REDCap project left column
+% * You must have necessary privilege to execute the desired commands.
+%   You might get error 403 if you lack privilege (Error 403 indicates that the 
+%   server understands the request but refuses to authorize it).
+%    
+% The project contains two instruments named "instrument 1" and "instrument 2"
+% with an instance of the main field types (text, number, date, etc.). 
+
+%% Defining connection handle
+
+% Initialize urk and token. This script not included in the repository. 
+% Insert the url of your REDCap server and token directly in the next command. 
+run('redcap_api_token.m');           
+
+% Connection handle 
+db_conn = redcap_connection( ...
+  redcap_url, ...                   % insert url of redcap server
+  redcap_token, ...                 % insert redcap api token 
+  false, ...                        % project is not longitudinal
+  'table_format', 'cell2string');    % format options
+
+%% Download data dictionary 
+redcap_read_dictionary(db_conn, ["instrument 1" "instrument 2"])
+
+%% Write records
+%
+% * The data argument is an array of structures specifying values for different 
+%   records. Fields values are specified via a vector of strings (including for number). 
+%   The length of the value array must corresponds to the length of the field
+%   name array.  It is possible to specify different fields for different records.
+% * The record will be automatically created if the record_id does not exist.
+% * Existing data are overwritten. 
+% * The instrument name is not needed because field names are unique
+
+field_names = ["text_box" "numeric_box" "dropbox" "radiobutton" "likert_1" "likert_2" "likert_3"];
+data = [ ...
+    struct('record', 1, ...            
+           'field', field_names, ... 
+           'value', ["First record" "10"   "1" "2"   "2" "2" "1"] ...     
+       ), ...
+    struct('record', 2, ...                   
+           'field',  ["text_box" "date" "time" "datetime"], ...
+           'value', ["Second record" "2024-01-02" "09:30" "2024-01-02 09:30"] ... 
+       ) ...
+    ];
+
+% Write multiple records
+redcap_write(db_conn, data)
+
+%%
+% The `redcap_write_record` function is a wrapper around the 
+% `redcap_write` function that can be used to write value of a single
+% record.
+
+redcap_write_record(db_conn, 2, '',  field_names, ["Second record" "20"   "2" "1"   "1" "2" "1"]) 
+%% 
+redcap_write_record(db_conn, 1, '', ["date" "time" "datetime"], ["2024-02-01" "09:30" "2024-02-01 09:30"]) 
+%%
+% Update instrument status
+redcap_write_record(db_conn, 1, '', ["instrument_1_complete"], ["2"]) 
+
+%% Read records
+
+% Read all records
+redcap_read(db_conn, [], '', '')
+%%
+% Read a subset of records and fields
+redcap_read(db_conn, [1], '', field_names)
+
+%% Upload and Download a file
+
+% Upload a text file 
+redcap_write_file(conn, 1, '', 'file', 'LICENSE.txt')
+%% 
+% Download a text file
+redcap_read_file(conn, 1, '', 'file')
+%% 
+% Upload an jpeg image
+redcap_write_file(conn, 1, '', 'file', 'html/test_image.jpg')
+%%
+% Download jpeg image
+img = redcap_read_file(conn, 1, '', 'file');
+imshow(img);
+
+%% Delete records
+
+% catch possible error if privilege are insufficient 
+try
+    result = redcap_delete(db_conn, [2]);
+catch exc
+    disp(exc);
+end
+
+##### SOURCE END #####
+-->
+</body>
+</html>

@@ -1,5 +1,7 @@
-function result = REDCap_report(conn,  report_id)
-%% REDCap_report - Download report
+% redcap_report - download a report
+%
+% Copyright 2024 UniSR, Gabriel Baud-Bovy <gbaudbovy@gmail.com>
+function result = redcap_report(conn,  report_id)
   report_id = sprintf('%d', report_id);
   ops = weboptions('CertificateFilename', '', 'Debug', false);
   result = webwrite(conn.url, 'token', conn.token, 

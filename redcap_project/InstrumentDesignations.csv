@@ -1,0 +1,5 @@
+arm_num,unique_event_name,form
+1,event_1_arm_1,instrument_1
+1,event_1_arm_1,instrument_2
+1,event_2_arm_1,instrument_1
+1,event_2_arm_1,instrument_2

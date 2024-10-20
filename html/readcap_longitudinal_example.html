@@ -1,0 +1,362 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>readcap_longitudinal_example</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-10-20">
+<meta name="DC.source" content="readcap_longitudinal_example.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Example of longitudinal Project</a>
+</li>
+<li>
+<a href="#3">Initialization</a>
+</li>
+<li>
+<a href="#4">List of events</a>
+</li>
+<li>
+<a href="#5">Write records</a>
+</li>
+<li>
+<a href="#7">Read records</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">% redcap_longitudinal_example.m</span>
+<span class="comment">%</span>
+</pre>
+<h2 id="2">Example of longitudinal Project</h2>
+<p>The following csv file should be manually uploaded in REDCap Project Setup:</p>
+<div>
+<ul>
+<li>'DataDictionary.csv' : Data dictionary (same as basic example) (=&gt; Design instruments / Data Dictionary)</li>
+<li>'Events.csv': list of events (=&gt; Define My Events)</li>
+<li>'InstrumentDesignations.cs': mapping between events and instruments (=&gt; Designate Instruments for My Events)</li>
+</ul>
+</div>
+<p>This longitudinal project includes two events named 'event_1' and 'event_2'. Both events contain 'instrument_1' and 'instrument_2'.</p>
+<h2 id="3">Initialization</h2>
+<pre class="codeinput">
+<span class="comment">% Define REDCap URL and token for the connection</span>
+<span class="comment">% This line can be commented out and the information entered directly in</span>
+<span class="comment">% `redcap_connection`.</span>
+run(<span class="string">'redcap_api_token.m'</span>);
+
+<span class="comment">% Define a connection handle, i.e. a structure with REDCap connection,</span>
+<span class="comment">% project information and some options</span>
+db_conn = redcap_connection( <span class="keyword">...</span>
+  redcap_url, <span class="keyword">...</span><span class="comment">                   % insert url of redcap server</span>
+  redcap_token, <span class="keyword">...</span><span class="comment">                 % insert redcap api token</span>
+  false, <span class="keyword">...</span><span class="comment">                        % project is not longitudinal</span>
+  <span class="string">'table_format'</span>, <span class="string">'cell2string'</span>);   <span class="comment">% format options</span>
+</pre>
+<h2 id="4">List of events</h2>
+<pre class="codeinput">redcap_read_events(db_conn)
+</pre>
+<pre class="codeoutput">
+ans =
+
+  2&times;5 table
+
+    event_name    arm_num    unique_event_name    custom_event_label    event_id
+    __________    _______    _________________    __________________    ________
+
+    "Event 1"        1        "event_1_arm_1"         "event_1"           1265  
+    "Event 2"        1        "event_2_arm_1"         "event_2"           2764  
+
+</pre>
+<h2 id="5">Write records</h2>
+<pre class="codeinput">
+<span class="comment">% Ffield names for the two instruments</span>
+field_names_1 = [<span class="string">"text_box"</span> <span class="string">"numeric_box"</span> <span class="string">"dropbox"</span> <span class="string">"radiobutton"</span> <span class="keyword">...</span>
+                 <span class="string">"likert_1"</span> <span class="string">"likert_2"</span> <span class="string">"likert_3"</span>];
+field_names_2 = [<span class="string">"date"</span> <span class="string">"time"</span> <span class="string">"datetime"</span> <span class="string">"file"</span>];
+
+<span class="comment">% Array containing information for two records</span>
+data = [ <span class="keyword">...</span>
+    struct(<span class="string">'record'</span>, 1, <span class="keyword">...</span><span class="comment">            % integer</span>
+           <span class="string">'event'</span>, <span class="string">'event_1'</span>, <span class="keyword">...</span><span class="comment">     % (only for longitudinal projects)</span>
+           <span class="string">'field'</span>, field_names_1, <span class="keyword">...</span><span class="comment"> % array of strings</span>
+           <span class="string">'value'</span>, [<span class="string">"First record"</span> <span class="string">"10"</span>   <span class="string">"1"</span> <span class="string">"1"</span>  <span class="string">"2"</span> <span class="string">"2"</span> <span class="string">"1"</span>] <span class="keyword">...</span>
+       ), <span class="keyword">...</span>
+    struct(<span class="string">'record'</span>, 2, <span class="keyword">...</span><span class="comment">                  % integer</span>
+           <span class="string">'event'</span>, <span class="string">'event_2'</span>, <span class="keyword">...</span><span class="comment">   % (only for longitudinal projects)</span>
+           <span class="string">'field'</span>, [<span class="string">"text_box"</span>  <span class="string">"date"</span> <span class="string">"time"</span>], <span class="keyword">...</span><span class="comment"> % array of strings</span>
+           <span class="string">'value'</span>, [<span class="string">"Second record"</span> <span class="string">"2024-12-31"</span> <span class="string">"20:30"</span>] <span class="keyword">...</span>
+       ), <span class="keyword">...</span>
+    ];
+<span class="comment">% Write both records in REDCap</span>
+redcap_write(db_conn, data)
+</pre>
+<pre class="codeoutput">
+ans =
+
+  table
+
+    Var1
+    ____
+
+     2  
+
+</pre>
+<p>Create a third record and initialize it</p>
+<pre class="codeinput">redcap_write_record(db_conn, 1, <span class="string">'event_2'</span>, [<span class="string">"text_box"</span> <span class="string">"date"</span> <span class="string">"time"</span> <span class="string">"datetime"</span>], <span class="keyword">...</span>
+    [<span class="string">"Third record"</span> <span class="string">"2024-01-01"</span> <span class="string">"09:30"</span> <span class="string">"2024-01-02 09:30"</span>])
+</pre>
+<pre class="codeoutput">
+ans =
+
+  table
+
+    Var1
+    ____
+
+     1  
+
+</pre>
+<h2 id="7">Read records</h2>
+<div>
+<ul>
+<li>For longitudinal project, the `redcap_read returns a table with a row for each event. It best to specify the event(s) and the fields that correspond to these events.</li>
+<li>If two or more events are specified, the function returns a row for each combination of events and records stored in the database</li>
+<li>If no events (events = '') and no records (records=[]) are specified, it will return a table with a row for each combination of events and records stored in the database.</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">% Read fields for all events of two records</span>
+redcap_read(db_conn, [1 2], <span class="string">''</span>, [<span class="string">"text_box"</span> <span class="string">"date"</span> <span class="string">"time"</span>])
+</pre>
+<pre class="codeoutput">
+ans =
+
+  2&times;3 table
+
+       text_box           date         time  
+    _______________    ___________    _______
+
+    "Third record"     01-Jan-2024    "09:30"
+    "Second record"    31-Dec-2024    "20:30"
+
+</pre>
+<p>return the whole record for one record note that there is one line per event and a column for each field in the databse</p>
+<pre class="codeinput">redcap_read(db_conn, 1 , <span class="string">''</span>, <span class="string">''</span> )
+</pre>
+<pre class="codeoutput">
+ans =
+
+  1&times;15 table
+
+    record_id    redcap_event_name       text_box       numeric_box    dropbox    radiobutton    likert_1    likert_2    likert_3    instrument_1_complete       date         time            datetime          file    instrument_2_complete
+    _________    _________________    ______________    ___________    _______    ___________    ________    ________    ________    _____________________    ___________    _______    ____________________    ____    _____________________
+
+        1         "event_1_arm_1"     "Third record"        10            1            1            2           2           1                  0              01-Jan-2024    "09:30"    02-Jan-2024 09:30:00    NaN               0          
+
+</pre>
+<p>Select event note that there is still a column for every field in the databse</p>
+<pre class="codeinput">redcap_read(db_conn, 1, <span class="string">'event_2'</span>, <span class="string">''</span> )
+</pre>
+<pre class="codeoutput">
+ans =
+
+  1&times;12 table
+
+       date              datetime          dropbox    likert_1    likert_2    likert_3    numeric_box    radiobutton    record_id    redcap_event_name       text_box        time  
+    ___________    ____________________    _______    ________    ________    ________    ___________    ___________    _________    _________________    ______________    _______
+
+    01-Jan-2024    02-Jan-2024 09:30:00       1          2           2           1            10              1             1         "event_1_arm_1"     "Third record"    "09:30"
+
+</pre>
+<p>Table with all records and all fields</p>
+<pre class="codeinput">redcap_read(db_conn, [], <span class="string">''</span>, <span class="string">''</span> )
+</pre>
+<pre class="codeoutput">
+ans =
+
+  2&times;15 table
+
+    record_id    redcap_event_name       text_box        numeric_box    dropbox    radiobutton    likert_1    likert_2    likert_3    instrument_1_complete       date         time            datetime          file    instrument_2_complete
+    _________    _________________    _______________    ___________    _______    ___________    ________    ________    ________    _____________________    ___________    _______    ____________________    ____    _____________________
+
+        1         "event_1_arm_1"     "Third record"          10            1            1            2           2           1                 0              01-Jan-2024    "09:30"    02-Jan-2024 09:30:00    NaN               0          
+        2         "event_1_arm_1"     "Second record"        NaN          NaN          NaN          NaN         NaN         NaN                 0              31-Dec-2024    "20:30"                     NaT    NaN               0          
+
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+% redcap_longitudinal_example.m 
+%
+%% Example of longitudinal Project
+%
+% The following csv file should be manually uploaded in REDCap Project
+% Setup:
+%
+% * 'DataDictionary.csv' :       Data dictionary (same as basic example)
+%                                (=> Design instruments / Data Dictionary)
+% * 'Events.csv':                list of events  
+%                                (=> Define My Events) 
+% * 'InstrumentDesignations.cs': mapping between events and instruments
+%                                (=> Designate Instruments for My Events)
+%
+% This longitudinal project includes two events named 'event_1' and 'event_2'. 
+% Both events contain 'instrument_1' and 'instrument_2'.
+%
+
+%% Initialization
+
+% Define REDCap URL and token for the connection
+% This line can be commented out and the information entered directly in
+% `redcap_connection`.
+run('redcap_api_token.m'); 
+
+% Define a connection handle, i.e. a structure with REDCap connection, 
+% project information and some options
+db_conn = redcap_connection( ...
+  redcap_url, ...                   % insert url of redcap server
+  redcap_token, ...                 % insert redcap api token 
+  false, ...                        % project is not longitudinal
+  'table_format', 'cell2string');   % format options
+
+
+%% List of events 
+redcap_read_events(db_conn)
+
+%% Write records
+
+% Ffield names for the two instruments
+field_names_1 = ["text_box" "numeric_box" "dropbox" "radiobutton" ...
+                 "likert_1" "likert_2" "likert_3"];
+field_names_2 = ["date" "time" "datetime" "file"];
+
+% Array containing information for two records
+data = [ ...
+    struct('record', 1, ...            % integer
+           'event', 'event_1', ...     % (only for longitudinal projects)
+           'field', field_names_1, ... % array of strings
+           'value', ["First record" "10"   "1" "1"  "2" "2" "1"] ...
+       ), ...
+    struct('record', 2, ...                  % integer
+           'event', 'event_2', ...   % (only for longitudinal projects)
+           'field', ["text_box"  "date" "time"], ... % array of strings
+           'value', ["Second record" "2024-12-31" "20:30"] ...
+       ), ...
+    ];
+% Write both records in REDCap 
+redcap_write(db_conn, data)
+
+%%
+% Create a third record and initialize it     
+redcap_write_record(db_conn, 1, 'event_2', ["text_box" "date" "time" "datetime"], ...
+    ["Third record" "2024-01-01" "09:30" "2024-01-02 09:30"]) 
+
+
+%% Read records
+%
+% * For longitudinal project, the `redcap_read returns a table with a row for 
+%   each event. It best to specify the event(s) and the fields that correspond 
+%   to these events. 
+% * If two or more events are specified, the function returns a row for each 
+%   combination of events and records stored in the database
+% * If no events  (events = '') and no records (records=[]) are specified,
+%   it will return a table with a row for each combination of events and 
+%   records stored in the database.
+
+% Read fields for all events of two records
+redcap_read(db_conn, [1 2], '', ["text_box" "date" "time"])
+%%
+% return the whole record for one record  
+% note that there is one line per event and a column for each
+% field in the databse
+redcap_read(db_conn, 1 , '', '' )
+%%
+% Select event
+% note that there is still a column for every field in the databse
+redcap_read(db_conn, 1, 'event_2', '' )
+%%
+% Table with all records and all fields
+redcap_read(db_conn, [], '', '' )
+
+##### SOURCE END #####
+-->
+</body>
+</html>

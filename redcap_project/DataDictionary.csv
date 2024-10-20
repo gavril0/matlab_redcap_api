@@ -1,0 +1,13 @@
+"Variable / Field Name","Form Name","Section Header","Field Type","Field Label","Choices, Calculations, OR Slider Labels","Field Note","Text Validation Type OR Show Slider Number","Text Validation Min","Text Validation Max",Identifier?,"Branching Logic (Show field only if...)","Required Field?","Custom Alignment","Question Number (surveys only)","Matrix Group Name","Matrix Ranking?","Field Annotation"
+record_id,instrument_1,,text,"Record ID",,,,,,,,,,,,,
+text_box,instrument_1,"First Section ",text,"Enter text",,,,,,,,,,,,,
+numeric_box,instrument_1,,text,"Enter number between (0-100):",,,number,0,100,,,,,,,,
+dropbox,instrument_1,"Second section",dropdown,"Select choice:","1, Choice 1 | 2, Choice 2",,,,,,,,,,,,
+radiobutton,instrument_1,,radio,"Select choice:","1, Choice 1 | 2, Choice 2",,,,,,,,,,,,
+likert_1,instrument_1,"Likert Scale ",radio,"Question 1","1, Resp. 1 | 2, Resp. 2 | 3, Resp. 3 | 4, Resp. 4",,,,,,,,,,likert,,
+likert_2,instrument_1,,radio,"Question 2","1, Resp. 1 | 2, Resp. 2 | 3, Resp. 3 | 4, Resp. 4",,,,,,,,,,likert,,
+likert_3,instrument_1,,radio,"Question 3","1, Resp. 1 | 2, Resp. 2 | 3, Resp. 3 | 4, Resp. 4",,,,,,,,,,likert,,
+date,instrument_2,"Date/time section",text,"Enter date (between 01-01-2024 and 31-12-2024):",,,date_dmy,2024-01-01,2024-12-31,,,,,,,,
+time,instrument_2,,text,"Enter time (8:00-16:00):",,,time,08:00,16:00,,,,,,,,
+datetime,instrument_2,,text,"Enter date and time:",,,datetime_dmy,,,,,,,,,," @HIDEBUTTON"
+file,instrument_2,"File Upload Section",file,"Select file:",,,,,,,,,,,,,
